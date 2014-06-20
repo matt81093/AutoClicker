@@ -31,6 +31,35 @@ namespace AutoClicker
         public Form1()
         {
             InitializeComponent();
+            amounttext.Text = Properties.Settings.Default.clickamountsave;
+            clickintervaltext.Text = Properties.Settings.Default.clickintervalsave;
+            try
+            {
+                clicktcombo.SelectedIndex = Properties.Settings.Default.clicktypesave;
+            }
+            catch
+            {
+                clicktcombo.SelectedIndex = 0;
+            }
+            try
+            {
+                typecombo.SelectedIndex = Properties.Settings.Default.clicktimessave;
+            }
+            catch
+            {
+                typecombo.SelectedIndex = 0;
+            }
+            if (Properties.Settings.Default.curfixedsave == false)
+            {
+                cursorrbut.Checked = true;
+            }
+            else
+            {
+                fixedrbut.Checked = true;
+            }
+            clickLocation = Properties.Settings.Default.pointsave;
+            string locationstring = clickLocation.ToString();
+            coordlabel.Text = (locationstring.Remove(locationstring.Length - 1)).Remove(0, 1);
             RegisterHotKey(this.Handle, START_HOTKEY, 0, (int)Keys.F1);
             RegisterHotKey(this.Handle, STOP_HOTKEY, 0, (int)Keys.F2);
             RegisterHotKey(this.Handle, SELECT_HOTKEY, 0, (int)Keys.F3);
@@ -49,6 +78,8 @@ namespace AutoClicker
             else if (m.Msg == 0x0312 && m.WParam.ToInt32() == SELECT_HOTKEY)
             {
                 clickLocation = Cursor.Position;
+                Properties.Settings.Default.pointsave = clickLocation;
+                Properties.Settings.Default.Save();
                 string locationstring = clickLocation.ToString();
                 coordlabel.Text = (locationstring.Remove(locationstring.Length - 1)).Remove(0, 1);
             }
@@ -101,6 +132,10 @@ namespace AutoClicker
                         fixedrbut.Enabled = false;
                         amounttext.Enabled = false;
                         clickintervaltext.Enabled = false;
+                        clicktcombo.Enabled = false;
+                        typecombo.Enabled = false;
+                        statusheaderlabel.ForeColor = Color.Green;
+                        statuslabel.ForeColor = Color.Green;
                         clicktimer.Interval = timerinterv;
                         clicktimer.Start();
                     }
@@ -125,8 +160,12 @@ namespace AutoClicker
                 fixedrbut.Enabled = true;
                 amounttext.Enabled = true;
                 clickintervaltext.Enabled = true;
+                clicktcombo.Enabled = true;
+                typecombo.Enabled = true;
                 clicktimer.Stop();
                 statuslabel.Text = "Not Clicking";
+                statusheaderlabel.ForeColor = Color.Red;
+                statuslabel.ForeColor = Color.Red;
             }
             else
             {
@@ -136,6 +175,10 @@ namespace AutoClicker
 
         const int MOUSEEVENTF_LEFTDOWN = 2;
         const int MOUSEEVENTF_LEFTUP = 4;
+        const int MOUSEEVENTF_RIGHTDOWN = 8;
+        const int MOUSEEVENTF_RIGHTUP = 16;
+        const int MOUSEEVENTF_MIDDLEUP = 32;
+        const int MOUSEEVENTF_MIDDLEDOWN = 64;
         //input type constant
         const int INPUT_MOUSE = 0;
 
@@ -157,6 +200,61 @@ namespace AutoClicker
             public uint type;
             public MOUSEINPUT mi;
         };
+
+
+        public void clickatcur()
+        {
+            int clickbutton = clicktcombo.SelectedIndex;
+            int clicktimes = typecombo.SelectedIndex + 1;
+            while (clicktimes > 0)
+            {
+                //set up the INPUT struct and fill it for the mouse down
+                INPUT i = new INPUT();
+                i.type = INPUT_MOUSE;
+                i.mi.dx = 0;
+                i.mi.dy = 0;
+                if (clickbutton == 0)
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                }
+                else if (clickbutton == 1)
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+                }
+                else if (clickbutton == 2)
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+                }
+                else
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                }
+                i.mi.dwExtraInfo = IntPtr.Zero;
+                i.mi.mouseData = 0;
+                i.mi.time = 0;
+                //send the input 
+                SendInput(1, ref i, Marshal.SizeOf(i));
+                //set the INPUT for mouse up and send it
+                if (clickbutton == 0)
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+                }
+                else if (clickbutton == 1)
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_MIDDLEUP;
+                }
+                else if (clickbutton == 2)
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+                }
+                else
+                {
+                    i.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+                }
+                SendInput(1, ref i, Marshal.SizeOf(i));
+                clicktimes--;
+            }
+        }
 
         private void clicktimer_Tick(object sender, EventArgs e)
         {
@@ -191,24 +289,6 @@ namespace AutoClicker
             }
         }
 
-        public void clickatcur()
-        {
-            //set up the INPUT struct and fill it for the mouse down
-            INPUT i = new INPUT();
-            i.type = INPUT_MOUSE;
-            i.mi.dx = 0;
-            i.mi.dy = 0;
-            i.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-            i.mi.dwExtraInfo = IntPtr.Zero;
-            i.mi.mouseData = 0;
-            i.mi.time = 0;
-            //send the input 
-            SendInput(1, ref i, Marshal.SizeOf(i));
-            //set the INPUT for mouse up and send it
-            i.mi.dwFlags = MOUSEEVENTF_LEFTUP;
-            SendInput(1, ref i, Marshal.SizeOf(i));
-        }
-
         private void startbutton_Click(object sender, EventArgs e)
         {
             start();
@@ -221,7 +301,7 @@ namespace AutoClicker
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Developed by Orphamiel\n\nContact Email : orphamiel@yahoo.com", "About");
+            MessageBox.Show("AutoClicker v1.0.0.1\n\nDeveloped by Orphamiel\n\nContact Email : orphamiel@yahoo.com", "About");
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -247,5 +327,40 @@ namespace AutoClicker
             }
         }
 
+        private void amounttext_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.clickamountsave = amounttext.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void clickintervaltext_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.clickintervalsave = clickintervaltext.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void clicktcombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.clicktypesave = clicktcombo.SelectedIndex;
+            Properties.Settings.Default.Save();
+        }
+
+        private void cursorrbut_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.curfixedsave = false;
+            Properties.Settings.Default.Save();
+        }
+
+        private void fixedrbut_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.curfixedsave = true;
+            Properties.Settings.Default.Save();
+        }
+
+        private void typecombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.clicktimessave = typecombo.SelectedIndex;
+            Properties.Settings.Default.Save();
+        }
     }
 }
