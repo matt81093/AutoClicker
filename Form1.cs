@@ -24,9 +24,9 @@ namespace AutoClicker
         [DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        const int START_HOTKEY = 1;
-        const int STOP_HOTKEY = 2;
-        const int SELECT_HOTKEY = 3;
+        public const int START_HOTKEY = 1;
+        public const int STOP_HOTKEY = 2;
+        public const int SELECT_HOTKEY = 3;
 
         public Form1()
         {
@@ -60,16 +60,29 @@ namespace AutoClicker
             clickLocation = Properties.Settings.Default.pointsave;
             string locationstring = clickLocation.ToString();
             coordlabel.Text = (locationstring.Remove(locationstring.Length - 1)).Remove(0, 1);
-            RegisterHotKey(this.Handle, START_HOTKEY, 0, (int)Keys.F1);
-            RegisterHotKey(this.Handle, STOP_HOTKEY, 0, (int)Keys.F2);
-            RegisterHotKey(this.Handle, SELECT_HOTKEY, 0, (int)Keys.F3);
+            RegisterHotKey(this.Handle, START_HOTKEY, 0, Properties.Settings.Default.startkey);
+            RegisterHotKey(this.Handle, STOP_HOTKEY, 0, Properties.Settings.Default.stopkey);
+            RegisterHotKey(this.Handle, SELECT_HOTKEY, 0, Properties.Settings.Default.selectkey);
+            //change hotkey apperance on buttons
+            startbutton.Text = "Start (" + ((Keys)Enum.Parse(typeof(Keys), Properties.Settings.Default.startkey.ToString())).ToString() + ")";
+            stopbut.Text = "Stop (" + ((Keys)Enum.Parse(typeof(Keys), Properties.Settings.Default.stopkey.ToString())).ToString() + ")";
+            fixedlabel.Text = "Fixed Location (Press " + ((Keys)Enum.Parse(typeof(Keys), Properties.Settings.Default.selectkey.ToString())).ToString() + " to Set) :";
+        }
+
+        public void updateapperance()
+        {
+            startbutton.Text = "Start (" + ((Keys)Enum.Parse(typeof(Keys), Properties.Settings.Default.startkey.ToString())).ToString() + ")";
+            stopbut.Text = "Stop (" + ((Keys)Enum.Parse(typeof(Keys), Properties.Settings.Default.stopkey.ToString())).ToString() + ")";
+            fixedlabel.Text = "Fixed Location (Press " + ((Keys)Enum.Parse(typeof(Keys), Properties.Settings.Default.selectkey.ToString())).ToString() + " to Set) :";
         }
 
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == 0x0312 && m.WParam.ToInt32() == START_HOTKEY)
             {
+                //UnregisterHotKey(this.Handle, 1);
                 start();
+                //RegisterHotKey(this.Handle, 1, 0, Properties.Settings.Default.startkey);
             }
             else if (m.Msg == 0x0312 && m.WParam.ToInt32() == STOP_HOTKEY)
             {
@@ -134,6 +147,7 @@ namespace AutoClicker
                         clickintervaltext.Enabled = false;
                         clicktcombo.Enabled = false;
                         typecombo.Enabled = false;
+                        startbutton.Enabled = false;
                         statusheaderlabel.ForeColor = Color.Green;
                         statuslabel.ForeColor = Color.Green;
                         clicktimer.Interval = timerinterv;
@@ -162,6 +176,7 @@ namespace AutoClicker
                 clickintervaltext.Enabled = true;
                 clicktcombo.Enabled = true;
                 typecombo.Enabled = true;
+                startbutton.Enabled = true;
                 clicktimer.Stop();
                 statuslabel.Text = "Not Clicking";
                 statusheaderlabel.ForeColor = Color.Red;
@@ -301,7 +316,10 @@ namespace AutoClicker
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("AutoClicker v1.0.0.1\n\nDeveloped by Orphamiel\n\nContact Email : orphamiel@yahoo.com", "About");
+            using (AboutForm frm = new AboutForm())
+            {
+                frm.ShowDialog();
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -361,6 +379,24 @@ namespace AutoClicker
         {
             Properties.Settings.Default.clicktimessave = typecombo.SelectedIndex;
             Properties.Settings.Default.Save();
+        }
+
+        private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://sourceforge.net/projects/orphamielautoclicker/");
+        }
+
+        private void bugReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://sourceforge.net/p/orphamielautoclicker/tickets/");
+        }
+
+        private void hotkeysToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (Hotkeys frm = new Hotkeys(this))
+            {
+                frm.ShowDialog();
+            }
         }
     }
 }

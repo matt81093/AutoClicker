@@ -94,5 +94,41 @@ namespace AutoClicker.Properties {
                 this["clicktimessave"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("112")]
+        public int startkey {
+            get {
+                return ((int)(this["startkey"]));
+            }
+            set {
+                this["startkey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("113")]
+        public int stopkey {
+            get {
+                return ((int)(this["stopkey"]));
+            }
+            set {
+                this["stopkey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("114")]
+        public int selectkey {
+            get {
+                return ((int)(this["selectkey"]));
+            }
+            set {
+                this["selectkey"] = value;
+            }
+        }
     }
 }

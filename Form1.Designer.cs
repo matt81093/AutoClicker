@@ -42,7 +42,11 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hotkeySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bugReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixedrbut = new System.Windows.Forms.RadioButton();
             this.cursorrbut = new System.Windows.Forms.RadioButton();
@@ -53,7 +57,6 @@
             this.clicktcombo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.typecombo = new System.Windows.Forms.ComboBox();
-            this.underConstructionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,7 +66,7 @@
             this.startbutton.Name = "startbutton";
             this.startbutton.Size = new System.Drawing.Size(124, 23);
             this.startbutton.TabIndex = 0;
-            this.startbutton.Text = "Start (F1)";
+            this.startbutton.Text = "Start (?)";
             this.startbutton.UseVisualStyleBackColor = true;
             this.startbutton.Click += new System.EventHandler(this.startbutton_Click);
             // 
@@ -78,7 +81,7 @@
             this.stopbut.Name = "stopbut";
             this.stopbut.Size = new System.Drawing.Size(127, 23);
             this.stopbut.TabIndex = 1;
-            this.stopbut.Text = "Stop (F2)";
+            this.stopbut.Text = "Stop (?)";
             this.stopbut.UseVisualStyleBackColor = true;
             this.stopbut.Click += new System.EventHandler(this.stopbut_Click);
             // 
@@ -146,8 +149,8 @@
             this.menuStrip.BackColor = System.Drawing.SystemColors.MenuBar;
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.hotkeySettingsToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.SettingsToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(284, 24);
@@ -169,18 +172,49 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // hotkeySettingsToolStripMenuItem
+            // SettingsToolStripMenuItem
             // 
-            this.hotkeySettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.underConstructionToolStripMenuItem});
-            this.hotkeySettingsToolStripMenuItem.Name = "hotkeySettingsToolStripMenuItem";
-            this.hotkeySettingsToolStripMenuItem.Size = new System.Drawing.Size(102, 20);
-            this.hotkeySettingsToolStripMenuItem.Text = "Hotkey Settings";
+            this.SettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hotkeysToolStripMenuItem});
+            this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.SettingsToolStripMenuItem.Text = "Options";
+            // 
+            // hotkeysToolStripMenuItem
+            // 
+            this.hotkeysToolStripMenuItem.Name = "hotkeysToolStripMenuItem";
+            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.hotkeysToolStripMenuItem.Text = "Hotkeys";
+            this.hotkeysToolStripMenuItem.Click += new System.EventHandler(this.hotkeysToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.websiteToolStripMenuItem,
+            this.bugReportToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // websiteToolStripMenuItem
+            // 
+            this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
+            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.websiteToolStripMenuItem.Text = "Website";
+            this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+            // 
+            // bugReportToolStripMenuItem
+            // 
+            this.bugReportToolStripMenuItem.Name = "bugReportToolStripMenuItem";
+            this.bugReportToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.bugReportToolStripMenuItem.Text = "Bug Report";
+            this.bugReportToolStripMenuItem.Click += new System.EventHandler(this.bugReportToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -220,9 +254,9 @@
             this.fixedlabel.AutoSize = true;
             this.fixedlabel.Location = new System.Drawing.Point(26, 235);
             this.fixedlabel.Name = "fixedlabel";
-            this.fixedlabel.Size = new System.Drawing.Size(163, 13);
+            this.fixedlabel.Size = new System.Drawing.Size(157, 13);
             this.fixedlabel.TabIndex = 13;
-            this.fixedlabel.Text = "Fixed Location (Press F3 to Set) :";
+            this.fixedlabel.Text = "Fixed Location (Press ? to Set) :";
             // 
             // statusheaderlabel
             // 
@@ -280,12 +314,6 @@
             this.typecombo.TabIndex = 17;
             this.typecombo.SelectedIndexChanged += new System.EventHandler(this.typecombo_SelectedIndexChanged);
             // 
-            // underConstructionToolStripMenuItem
-            // 
-            this.underConstructionToolStripMenuItem.Name = "underConstructionToolStripMenuItem";
-            this.underConstructionToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.underConstructionToolStripMenuItem.Text = "Under Construction";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -335,7 +363,7 @@
         private System.Windows.Forms.TextBox amounttext;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.RadioButton fixedrbut;
         private System.Windows.Forms.RadioButton cursorrbut;
         private System.Windows.Forms.Label clickatlabel;
@@ -346,8 +374,11 @@
         private System.Windows.Forms.ComboBox clicktcombo;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox typecombo;
-        private System.Windows.Forms.ToolStripMenuItem hotkeySettingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem underConstructionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hotkeysToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bugReportToolStripMenuItem;
     }
 }
 
